@@ -1,0 +1,21 @@
+﻿{
+  "dependencies": {
+    "Carable.Lazy": "1.0.0",
+    "dotnet-test-nunit-teamcity": "3.4.0-beta-3",
+    "Microsoft.NETCore.App": {
+      "version": "1.1.0",
+      "type": "platform"
+    },
+    "NUnit": "3.6.0"
+  },
+  "frameworks": {
+    "netcoreapp1.1": {
+      "imports": [
+        "dotnet5.6",
+        "portable-net45+win8"
+      ]
+    }
+  },
+  "testRunner": "nunit-teamcity",
+  "version": "1.1.0-*"
+}
