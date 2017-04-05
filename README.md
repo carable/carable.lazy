@@ -2,6 +2,12 @@
 
 This repository contains an implementation of Lazy<T> that has a timeout for the value.
 
+Why would you want to do something like this? A good start is to start looking at why you use Lazy<T>
+
+https://msdn.microsoft.com/en-us/library/dd997286(v=vs.110).aspx
+
+Say that the value has a given lifespan, then you get into a situation where you want to invalidate a previous value and hold on to a new one.
+
 # Get Started
 
 ## Install the NuGet package
