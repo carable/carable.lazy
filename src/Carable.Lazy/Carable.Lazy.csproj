@@ -11,8 +11,4 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
-  <Target Name="PostcompileScript" AfterTargets="Build">
-    <Exec Command="dotnet pack --no-build --configuration $(Configuration)" />
-  </Target>
-
 </Project>

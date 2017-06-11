@@ -64,44 +64,42 @@ namespace Carable.Lazy
         {
             get
             {
+                switch (mode)
                 {
-                    var current = valueReference;
-                    if (IsNotNullOrExpired(current))
-                        return current.Value;
-                }
-                if (mode == LazyThreadSafetyMode.ExecutionAndPublication)
-                {
-                    lock (lockObj)
-                    {
-                        var current = valueReference;
-                        if (IsNotNullOrExpired(current))
-                            return current.Value;
+                    case LazyThreadSafetyMode.ExecutionAndPublication:
+                        lock (lockObj)
+                        {
+                            var current = valueReference;
+                            if (IsNotNullOrExpired(current))
+                                return current.Value;
 
-                        this.valueReference = new ValueAndExpires(valueGenerator());
+                            this.valueReference = new ValueAndExpires(valueGenerator());
 
-                        return valueReference.Value;
-                    }
-                }
+                            return valueReference.Value;
+                        }
+                    case LazyThreadSafetyMode.PublicationOnly:
+                        {
+                            var current = valueReference;
+                            if (IsNotNullOrExpired(current))
+                                return current.Value;
+                            var newValue = valueGenerator();
 
-                else if (mode == LazyThreadSafetyMode.PublicationOnly)
-                {
-                    var newValue = valueGenerator();
-
-                    lock (lockObj)
-                    {
-                        var current = valueReference;
-                        if (IsNotNullOrExpired(current))
-                            return current.Value;
-
-                        valueReference = new ValueAndExpires(newValue);
-                        return valueReference.Value;
-                    }
-                }
-                else
-                {
-                    var current = new ValueAndExpires(valueGenerator());
-                    valueReference = current;
-                    return current.Value;
+                            lock (lockObj)
+                            {
+                                valueReference = new ValueAndExpires(newValue);
+                                return valueReference.Value;
+                            }
+                        }
+                    default:
+                        {
+                            var current = valueReference;
+                            if (IsNotNullOrExpired(current))
+                                return current.Value;
+                            
+                            current = new ValueAndExpires(valueGenerator());
+                            valueReference = current;
+                            return valueReference.Value;
+                        }
                 }
             }
         }
