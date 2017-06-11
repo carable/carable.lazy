@@ -12,7 +12,7 @@ Say that the value has a given lifespan, then you get into a situation where you
 
 ## Install the NuGet package
 
-Go to the defined NuGet feed and install the package [Carable.Lazy](https://www.myget.org/feed/carable/package/nuget/Carable.Lazy).
+Go to the defined NuGet feed and install the package [Carable.Lazy](https://www.myget.org/feed/carable-public/package/nuget/Carable.Lazy).
 
 ## Use in code
 
