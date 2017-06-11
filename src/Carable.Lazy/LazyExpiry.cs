@@ -9,15 +9,6 @@ namespace Carable.Lazy
     /// </summary>
     public class LazyExpiry<T>
     {
-        // A dummy delegate used as a  :
-        // 1- Flag to avoid recursive call to Value in None and ExecutionAndPublication modes in m_valueFactory
-        // 2- Flag to m_threadSafeObj if ExecutionAndPublication mode and the value is known to be initialized
-        static readonly Func<T> ALREADY_INVOKED_SENTINEL = delegate
-        {
-            //throw new (false, "ALREADY_INVOKED_SENTINEL should never be invoked.");
-            return default(T);
-        };
-
         class ValueAndExpires
         {
             public ValueAndExpires(Tuple<T, DateTime> valueAndExpires) : this(valueAndExpires.Item1, valueAndExpires.Item2)
@@ -41,11 +32,8 @@ namespace Carable.Lazy
         /// <param name="now"></param>
         public LazyExpiry(Func<Tuple<T, DateTime>> valueGenerator, LazyThreadSafetyMode mode = LazyThreadSafetyMode.PublicationOnly, Func<DateTime> now = null)
         {
-            if (valueGenerator == null)
-                throw new ArgumentNullException("valueFactory");
-
             this.mode = mode;
-            this.valueGenerator = valueGenerator;
+            this.valueGenerator = valueGenerator ?? throw new ArgumentNullException(nameof(valueGenerator));
             this.now = now != null ? now : DefaultNow;
         }
 
