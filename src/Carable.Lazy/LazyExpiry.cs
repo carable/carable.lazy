@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Carable.Lazy.Internals;
 
 namespace Carable.Lazy
 {
@@ -9,21 +10,7 @@ namespace Carable.Lazy
     /// </summary>
     public class LazyExpiry<T>
     {
-        class ValueAndExpires
-        {
-            public ValueAndExpires(Tuple<T, DateTime> valueAndExpires) : this(valueAndExpires.Item1, valueAndExpires.Item2)
-            {
-            }
 
-            public ValueAndExpires(T value, DateTime expires)
-            {
-                this.Value = value;
-                this.Expires = expires;
-            }
-
-            public readonly T Value;
-            public readonly DateTime Expires;
-        }
         /// <summary>
         /// 
         /// </summary>
@@ -40,7 +27,7 @@ namespace Carable.Lazy
         /// <summary>
         /// 
         /// </summary>
-        public LazyExpiry(Func<Tuple<T, DateTime>> valueGenerator, bool threadSafe)
+        public LazyExpiry(Func<Tuple<T, DateTime>> valueGenerator)
             : this(valueGenerator, LazyThreadSafetyMode.ExecutionAndPublication)
         {
         }
@@ -54,7 +41,7 @@ namespace Carable.Lazy
         {
             return DateTime.UtcNow;
         }
-        ValueAndExpires valueReference;
+        ValueAndExpires<T> valueReference;
         private readonly Func<DateTime> now;
 
         /// <summary>
@@ -73,7 +60,7 @@ namespace Carable.Lazy
                             if (IsNotNullOrExpired(current))
                                 return current.Value;
 
-                            this.valueReference = new ValueAndExpires(valueGenerator());
+                            this.valueReference = new ValueAndExpires<T>(valueGenerator());
 
                             return valueReference.Value;
                         }
@@ -86,7 +73,7 @@ namespace Carable.Lazy
 
                             lock (lockObj)
                             {
-                                valueReference = new ValueAndExpires(newValue);
+                                valueReference = new ValueAndExpires<T>(newValue);
                                 return valueReference.Value;
                             }
                         }
@@ -96,7 +83,7 @@ namespace Carable.Lazy
                             if (IsNotNullOrExpired(current))
                                 return current.Value;
                             
-                            current = new ValueAndExpires(valueGenerator());
+                            current = new ValueAndExpires<T>(valueGenerator());
                             valueReference = current;
                             return valueReference.Value;
                         }
@@ -105,7 +92,7 @@ namespace Carable.Lazy
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsNotNullOrExpired(ValueAndExpires current)
+        private bool IsNotNullOrExpired(ValueAndExpires<T> current)
         {
             return current != null && current.Expires > now();
         }

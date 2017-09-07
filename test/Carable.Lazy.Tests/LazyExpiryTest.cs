@@ -61,7 +61,7 @@ namespace Carable.Lazy.Tests
         {
             counter = 42;
             bool started = false;
-            var l = new LazyExpiry<int>(delegate () { return Tuple.Create(counter++, future); }, true);
+            var l = new LazyExpiry<int>(delegate () { return Tuple.Create(counter++, future); });
             bool failed = false;
             object monitor = new object();
             var threads = new Thread[4];
@@ -191,7 +191,7 @@ namespace Carable.Lazy.Tests
         [Fact]
         public void Trivial_Lazy()
         {
-            var x = new LazyExpiry<int>(Return22, false);
+            var x = new LazyExpiry<int>(Return22);
             Assert.True(22== x.Value, "#1");
         }
 
@@ -199,7 +199,7 @@ namespace Carable.Lazy.Tests
         public void Expired_lazy()
         {
             counter = 42;
-            var x = new LazyExpiry<int>(() => Tuple.Create(counter++, DateTime.Now.AddDays(-1)), false);
+            var x = new LazyExpiry<int>(() => Tuple.Create(counter++, DateTime.Now.AddDays(-1)));
             Assert.True(42== x.Value, "#1");
             Assert.True(43== x.Value, "#2");
             Assert.True(44== x.Value, "#3");
