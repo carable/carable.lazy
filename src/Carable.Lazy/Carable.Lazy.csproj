@@ -4,7 +4,7 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>Carable.Lazy</AssemblyName>
     <PackageId>Carable.Lazy</PackageId>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
